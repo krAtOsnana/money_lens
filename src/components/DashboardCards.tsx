@@ -12,6 +12,7 @@ const DashboardCards = () => {
     credit: number;
     balance: number;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totals, setTotals] = useState({
     balance: 0,
