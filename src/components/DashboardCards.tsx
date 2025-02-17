@@ -45,7 +45,7 @@ const DashboardCards = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, )
 
   return (
     <div>
