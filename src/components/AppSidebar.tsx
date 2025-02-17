@@ -27,7 +27,7 @@ const items = [
     },
     {
       title: "All Transactions",
-      url: "/accounts",
+      url: "/alltransactions",
       icon: Banknote,
     },
     {

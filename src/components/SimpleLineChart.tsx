@@ -1,5 +1,5 @@
-"use client";
-import React from "react";
+'use client'
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,70 +10,94 @@ import {
   Legend,
   ResponsiveContainer
 } from "recharts";
+import axios from "axios";
 
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100
-  }
-];
-
-export default function SimpleLineChart() {
-  return (
-    <ResponsiveContainer width={"100%"} height={300}>
-      <LineChart data={data} margin={{ top: 20 }} accessibilityLayer>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" padding={{ left: 30, right: 30 }} />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="uv"
-          stroke="#8884d8"
-          activeDot={{ r: 10 }}
-        ></Line>
-        <Line type="monotone" dataKey="pv" stroke="#82ca9d" ></Line>
-        <Line type="monotone" dataKey="amt" stroke="#1d019d"></Line>
-      </LineChart>
-    </ResponsiveContainer>
-  );
+interface Transaction {
+  _id: string;
+  month: string;
+  debit: number;
+  credit: number;
+  balance: number;
 }
+
+const SimpleLineChart = () => {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  const getData = async () => {
+    try {
+      const response = await axios.get("/api/get_transactions");
+      const sortedTransactions = response.data.transactions
+      setTransactions(sortedTransactions);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  return (
+    <div className="w-full p-4  rounded-lg shadow-sm ">
+      <h2 className="text-xl font-semibold mb-4 dark:text-white">Transaction Overview</h2>
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart
+          data={transactions}
+          margin={{
+            top: 20,
+            right: 30,
+            left: 20,
+            bottom: 10
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" className="dark:stroke-gray-700" />
+          <XAxis 
+            dataKey="month" 
+            className="dark:text-gray-400"
+            tick={{ fill: 'currentColor' }}
+          />
+          <YAxis 
+            className="dark:text-gray-400"
+            tick={{ fill: 'currentColor' }}
+          />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              border: 'none',
+              borderRadius: '8px',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+            }}
+          />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="credit"
+            name="Income"
+            stroke="#10b981"
+            strokeWidth={2}
+            dot={{ r: 4 }}
+            activeDot={{ r: 8 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="debit"
+            name="Expenses"
+            stroke="#ef4444"
+            strokeWidth={2}
+            dot={{ r: 4 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="balance"
+            name="Balance"
+            stroke="#3b82f6"
+            strokeWidth={2}
+            dot={{ r: 4 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+export default SimpleLineChart;

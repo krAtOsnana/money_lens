@@ -3,12 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import axios from 'axios'
  
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { transactionSchema } from "@/schemas/TransactionSchema"
+import { toast } from "@/hooks/use-toast"
  
 
  
@@ -25,16 +26,30 @@ export default function AddTransactionForm() {
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       month: "",
-      credit: 0,
-      debit: 0,
-      balance: 0
+      credit: "",
+      debit: "",
+      balance: ""
     },
   })
 
-  function onSubmit(values: z.infer<typeof transactionSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  const onSubmit = async(values: z.infer<typeof transactionSchema>) => {
+    
+    try {
+      const response = await axios.post('/api/create_transaction', {
+        ...values
+      });
+      toast({
+        title: response.data.message,
+        variant: 'default',
+      });
+      form.reset({ ...form.getValues(), month: '',balance:"",credit:"",debit:"" });
+      console.log(response.data.message);
+      
+    } catch (error) {
+      console.log(error )
+    }
+    //console.log(values)
+
   }
   return (
     <Form {...form}>
@@ -78,7 +93,7 @@ export default function AddTransactionForm() {
               </FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  
                   placeholder="Enter debit amount"
                   className="bg-background border-input text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   {...field}
@@ -100,7 +115,7 @@ export default function AddTransactionForm() {
               </FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  
                   placeholder="Enter credit amount"
                   className="bg-background border-input text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   {...field}
@@ -122,7 +137,7 @@ export default function AddTransactionForm() {
               </FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  
                   placeholder="Enter balance amount"
                   className="bg-background border-input text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   {...field}

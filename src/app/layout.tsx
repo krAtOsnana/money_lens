@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
               <main className=" h-full w-full overflow-y-hidden min-h-screen bg-background">
                 <SidebarTrigger />
                 {children}
+                <Toaster />
               </main>
             </div>
           </SidebarProvider>
