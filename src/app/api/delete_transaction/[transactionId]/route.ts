@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import TransactionModel from "@/model/Transaction";
 
 export async function DELETE(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { transactionId: string } }
 ) {
   await dbConnect();
