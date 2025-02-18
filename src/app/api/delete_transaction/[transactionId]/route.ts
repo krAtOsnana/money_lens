@@ -8,7 +8,7 @@ interface RouteParams {
   };
 }
 
-export async function DELETE(req: NextRequest, { params }: RouteParams) {
+export async function DELETE(req: NextRequest, res: NextResponse,  { params }: RouteParams) {
   await dbConnect();
 
   try {
