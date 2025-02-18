@@ -1,11 +1,14 @@
-import {  NextResponse } from "next/server";
+import {  NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import TransactionModel from "@/model/Transaction";
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { transactionId: string } }
-) {
+interface RouteParams {
+  params: {
+    transactionId: string;
+  };
+}
+
+export async function DELETE(req: NextRequest, { params }: RouteParams) {
   await dbConnect();
 
   try {
